@@ -35,7 +35,7 @@
             display: block;
             margin: 10px 0 5px;
         }
-        input, select, button, textarea {
+        input, select, button {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -43,9 +43,8 @@
             border-radius: 5px;
             font-size: 1em;
         }
-        input[type="number"] {
-            -webkit-appearance: none;
-            -moz-appearance: textfield;
+        input[type="range"] {
+            width: 100%;
         }
         button {
             background-color: #5a67d8;
@@ -56,9 +55,9 @@
         button:hover {
             background-color: #434190;
         }
-        .output {
-            font-weight: bold;
-            margin-top: 5px;
+        .checkbox-group {
+            display: flex;
+            gap: 10px;
         }
     </style>
 </head>
@@ -68,67 +67,100 @@
         <!-- Pain Tracking -->
         <div class="section">
             <h2>Pain Tracking</h2>
-            <label>Joint Pain Level:</label>
-            <input type="number" id="jointPain" min="0" max="10" value="0">
+            <label>Joint Pain Level: <span id="jointPainOutput">5</span></label>
+            <input type="range" id="jointPain" min="0" max="10" value="5" oninput="updateSlider('jointPain', 'jointPainOutput')">
             
-            <label>Tummy Pain Level:</label>
-            <input type="number" id="tummyPain" min="0" max="10" value="0">
+            <label>Tummy Pain Level: <span id="tummyPainOutput">5</span></label>
+            <input type="range" id="tummyPain" min="0" max="10" value="5" oninput="updateSlider('tummyPain', 'tummyPainOutput')">
             
-            <label>Headache Level:</label>
-            <input type="number" id="headachePain" min="0" max="10" value="0">
+            <label>Headache Level: <span id="headacheOutput">5</span></label>
+            <input type="range" id="headachePain" min="0" max="10" value="5" oninput="updateSlider('headachePain', 'headacheOutput')">
         </div>
 
-        <!-- Physical Activity -->
+        <!-- Sleep Tracking -->
         <div class="section">
-            <h2>Physical Activity</h2>
-            <label>Activity Type:</label>
-            <select id="activityType">
-                <option>Sedentary</option>
-                <option>Walking</option>
-                <option>Sitting</option>
-                <option>Shopping Trip</option>
-                <option>Out of Bed</option>
+            <h2>Sleep Tracking</h2>
+            <label>Hours Slept: <span id="hoursSleptOutput">8</span></label>
+            <input type="range" id="hoursSlept" min="0" max="24" value="8" oninput="updateSlider('hoursSlept', 'hoursSleptOutput')">
+            
+            <label>Sleep Quality:</label>
+            <select id="sleepQuality">
+                <option>Good</option>
+                <option>Broken</option>
+                <option>Poor</option>
+            </select>
+        </div>
+
+        <!-- Daily Activities -->
+        <div class="section">
+            <h2>Daily Activities</h2>
+            <label>Screen Time (hours): <span id="screenTimeOutput">2</span></label>
+            <input type="range" id="screenTime" min="0" max="24" value="2" oninput="updateSlider('screenTime', 'screenTimeOutput')">
+
+            <label>Creative Time (hours): <span id="creativeTimeOutput">1</span></label>
+            <input type="range" id="creativeTime" min="0" max="24" value="1" oninput="updateSlider('creativeTime', 'creativeTimeOutput')">
+
+            <label>Kids Time (hours): <span id="kidsTimeOutput">3</span></label>
+            <input type="range" id="kidsTime" min="0" max="24" value="3" oninput="updateSlider('kidsTime', 'kidsTimeOutput')">
+        </div>
+
+        <!-- Eating and Pills -->
+        <div class="section">
+            <h2>Diet and Medications</h2>
+            <label>Eating Level:</label>
+            <select id="eatingLevel">
+                <option>Healthy</option>
+                <option>Too Much</option>
+                <option>Not Enough</option>
             </select>
 
-            <label>Hours Spent:</label>
-            <input type="number" id="activityHours" min="0" max="24" value="0">
-        </div>
-
-        <!-- Notes -->
-        <div class="section">
-            <h2>Notes</h2>
-            <label>Additional Notes:</label>
-            <textarea id="notes" rows="4" placeholder="Explain any spikes or important events..."></textarea>
+            <label>Pill Tracking:</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" id="tookMorningPill"> Morning</label>
+                <label><input type="checkbox" id="tookNightPill"> Night</label>
+            </div>
         </div>
 
         <!-- Save Button -->
         <button onclick="saveData()">Save Data</button>
-        <div id="savedData" class="output"></div>
+        <div id="savedData"></div>
     </div>
 
     <script>
+        function updateSlider(sliderId, outputId) {
+            const value = document.getElementById(sliderId).value;
+            document.getElementById(outputId).innerText = value;
+        }
+
         function saveData() {
             const data = {
                 jointPain: document.getElementById('jointPain').value,
                 tummyPain: document.getElementById('tummyPain').value,
                 headachePain: document.getElementById('headachePain').value,
-                activityType: document.getElementById('activityType').value,
-                activityHours: document.getElementById('activityHours').value,
-                notes: document.getElementById('notes').value,
+                hoursSlept: document.getElementById('hoursSlept').value,
+                sleepQuality: document.getElementById('sleepQuality').value,
+                screenTime: document.getElementById('screenTime').value,
+                creativeTime: document.getElementById('creativeTime').value,
+                kidsTime: document.getElementById('kidsTime').value,
+                eatingLevel: document.getElementById('eatingLevel').value,
+                tookMorningPill: document.getElementById('tookMorningPill').checked,
+                tookNightPill: document.getElementById('tookNightPill').checked
             };
 
-            const output = `
+            document.getElementById('savedData').innerHTML = `
                 <h3>Saved Data:</h3>
-                <p>Joint Pain: ${data.jointPain}</p>
-                <p>Tummy Pain: ${data.tummyPain}</p>
-                <p>Headache Level: ${data.headachePain}</p>
-                <p>Activity: ${data.activityType} (${data.activityHours} hours)</p>
-                <p>Notes: ${data.notes}</p>
+                Joint Pain: ${data.jointPain}<br>
+                Tummy Pain: ${data.tummyPain}<br>
+                Headache Level: ${data.headachePain}<br>
+                Hours Slept: ${data.hoursSlept}<br>
+                Sleep Quality: ${data.sleepQuality}<br>
+                Screen Time: ${data.screenTime} hours<br>
+                Creative Time: ${data.creativeTime} hours<br>
+                Kids Time: ${data.kidsTime} hours<br>
+                Eating Level: ${data.eatingLevel}<br>
+                Took Morning Pill: ${data.tookMorningPill ? "Yes" : "No"}<br>
+                Took Night Pill: ${data.tookNightPill ? "Yes" : "No"}
             `;
-            document.getElementById('savedData').innerHTML = output;
-
-            // Optional: Save to localStorage
-            localStorage.setItem('healthTracker', JSON.stringify(data));
         }
     </script>
 </body>
