@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Health Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #5a67d8;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            color: #444;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select, button, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        input[type="number"] {
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+        }
+        button {
+            background-color: #5a67d8;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover {
+            background-color: #434190;
+        }
+        .output {
+            font-weight: bold;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Daily Health Tracker</h1>
+    <div class="container">
+        <!-- Pain Tracking -->
+        <div class="section">
+            <h2>Pain Tracking</h2>
+            <label>Joint Pain Level:</label>
+            <input type="number" id="jointPain" min="0" max="10" value="0">
+            
+            <label>Tummy Pain Level:</label>
+            <input type="number" id="tummyPain" min="0" max="10" value="0">
+            
+            <label>Headache Level:</label>
+            <input type="number" id="headachePain" min="0" max="10" value="0">
+        </div>
+
+        <!-- Physical Activity -->
+        <div class="section">
+            <h2>Physical Activity</h2>
+            <label>Activity Type:</label>
+            <select id="activityType">
+                <option>Sedentary</option>
+                <option>Walking</option>
+                <option>Sitting</option>
+                <option>Shopping Trip</option>
+                <option>Out of Bed</option>
+            </select>
+
+            <label>Hours Spent:</label>
+            <input type="number" id="activityHours" min="0" max="24" value="0">
+        </div>
+
+        <!-- Notes -->
+        <div class="section">
+            <h2>Notes</h2>
+            <label>Additional Notes:</label>
+            <textarea id="notes" rows="4" placeholder="Explain any spikes or important events..."></textarea>
+        </div>
+
+        <!-- Save Button -->
+        <button onclick="saveData()">Save Data</button>
+        <div id="savedData" class="output"></div>
+    </div>
+
+    <script>
+        function saveData() {
+            const data = {
+                jointPain: document.getElementById('jointPain').value,
+                tummyPain: document.getElementById('tummyPain').value,
+                headachePain: document.getElementById('headachePain').value,
+                activityType: document.getElementById('activityType').value,
+                activityHours: document.getElementById('activityHours').value,
+                notes: document.getElementById('notes').value,
+            };
+
+            const output = `
+                <h3>Saved Data:</h3>
+                <p>Joint Pain: ${data.jointPain}</p>
+                <p>Tummy Pain: ${data.tummyPain}</p>
+                <p>Headache Level: ${data.headachePain}</p>
+                <p>Activity: ${data.activityType} (${data.activityHours} hours)</p>
+                <p>Notes: ${data.notes}</p>
+            `;
+            document.getElementById('savedData').innerHTML = output;
+
+            // Optional: Save to localStorage
+            localStorage.setItem('healthTracker', JSON.stringify(data));
+        }
+    </script>
+</body>
+</html>
